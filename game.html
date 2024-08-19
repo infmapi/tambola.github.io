@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Page</title>
+    <style>
+        /* Set the background image and overall styling */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            transition: background-color 1s ease; /* Smooth transition for background color */
+        }
+
+                .button {
+            background: rgba(0, 0, 0, 0.4); /* Slight black tint with glassmorphism effect */
+            color: black;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            padding: 10px 20px;
+            transition: box-shadow 0.3s ease, background-color 0.3s;
+            margin: 10px;
+            text-align: center; /* Center text */
+        }
+
+        /* Glow effect for buttons */
+        .button:hover {
+            box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.7);
+        }
+
+/* Circle button with glassmorphism effect */
+        .roll-button {
+            background: rgba(0, 0, 0, 0.4); /* Slight black tint with glassmorphism effect */
+            color: black;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            padding: 20px;
+            width: 100px;
+            height: 100px;
+            transition: box-shadow 0.3s ease;
+            margin-bottom: 20px;
+            text-align: center; /* Center text */
+        }
+
+        /* Glow effect for circle button */
+        .roll-button:hover {
+            box-shadow: 0 0 30px 10px rgba(255, 255, 255, 0.9);
+        }
+                /* Container for buttons */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 400px; /* Limit the width of the button container */
+            margin-top: 20px;
+        }
+
+        /* Number display */
+        .number-display {
+            font-size: 192px; /* 4 times the original size (48px * 4) */
+            font-weight: bold;
+            color: black;
+            background-color: white;
+            border-radius: 10px;
+            padding: 40px;
+            margin-bottom: 20px;
+            display: none; /* Hidden initially */
+        }
+
+        /* Animation for spinning */
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Modal styling */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7); /* Slightly darker background */
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .close {
+            font-size: 24px;
+            cursor: pointer;
+            color: black;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: red;
+        }
+
+        /* Grid for the board */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr); /* 9 columns */
+            gap: 10px;
+        }
+
+        .grid-item {
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            background-color: white;
+            border: 2px solid black;
+            border-radius: 5px;
+            font-size: 20px;
+            font-weight: bold;
+            color: gray;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .grid-item.active {
+            color: black; /* Text color when the number is rolled */
+            background-color: #d3d3d3; /* Light gray background when active */
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); /* Slightly stronger shadow */
+        }
+    </style>
+</head>
+<body>
+    <!-- Number display area -->
+    <div id="numberDisplay" class="number-display"></div>
+
+    <!-- Roll button -->
+    <button class="roll-button" id="rollButton">Roll</button>
+
+    <!-- Container for Board and End buttons -->
+    <div class="button-container">
+        <button class="button" id="boardButton">Board</button>
+        <button class="button" id="endButton">End</button>
+    </div>
+
+    <!-- Modal for Board -->
+    <div id="boardModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title">Numbers Rolled</span>
+                <span class="close" id="closeBoard">&times;</span>
+            </div>
+            <div id="boardGrid" class="grid">
+                <!-- Grid items will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Array to keep track of used numbers
+        const usedNumbers = new Set();
+        const numberDisplay = document.getElementById('numberDisplay');
+        const rollButton = document.getElementById('rollButton');
+        const boardButton = document.getElementById('boardButton');
+        const endButton = document.getElementById('endButton');
+        const boardModal = document.getElementById('boardModal');
+        const closeBoard = document.getElementById('closeBoard');
+        const boardGrid = document.getElementById('boardGrid');
+
+        // Function to get a random number from 1 to 90 that hasn't been used
+        function getRandomNumber() {
+            let num;
+            do {
+                num = Math.floor(Math.random() * 90) + 1;
+            } while (usedNumbers.has(num));
+            usedNumbers.add(num);
+            return num;
+        }
+
+        // Function to change background color to a random color
+        function changeBackgroundColor() {
+            const randomColor = `hsl(${Math.random() * 360}, 70%, 80%)`;
+            document.body.style.backgroundColor = randomColor;
+        }
+
+        // Function to handle roll button click
+        rollButton.addEventListener('click', () => {
+            // Show the number display
+            numberDisplay.style.display = 'block';
+            numberDisplay.style.animation = 'spin 2s ease-in-out';
+
+            // Generate and display a random number
+            setTimeout(() => {
+                numberDisplay.textContent = getRandomNumber();
+                numberDisplay.style.animation = ''; // Remove the animation
+                changeBackgroundColor(); // Change background color
+            }, 2000); // Wait for the spin animation to finish
+        });
+
+        // Function to show the board modal
+        function showBoardModal() {
+            boardGrid.innerHTML = '';
+            for (let i = 1; i <= 90; i++) {
+                const gridItem = document.createElement('div');
+                gridItem.className = 'grid-item';
+                gridItem.textContent = i;
+                if (usedNumbers.has(i)) {
+                    gridItem.classList.add('active');
+                }
+                boardGrid.appendChild(gridItem);
+            }
+            boardModal.style.display = 'flex';
+        }
+
+        // Event listener for the Board button
+        boardButton.addEventListener('click', showBoardModal);
+
+        // Event listener for the End button
+        endButton.addEventListener('click', () => {
+            const confirmEnd = confirm('Game Over! Do you want to return to the home page?');
+            if (confirmEnd) {
+                window.location.href = 'index.html'; // Redirect to home page
+            }
+        });
+
+        // Close modal functionality
+        closeBoard.addEventListener('click', () => {
+            boardModal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside of it
+        window.addEventListener('click', (event) => {
+            if (event.target === boardModal) {
+                boardModal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

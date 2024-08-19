@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Website</title>
+    <style>
+        /* Set the background image */
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('Indexbg.png');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        /* Title styling */
+        .title {
+            font-size: 60px;
+            color: white;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.7); /* Initial glow effect */
+            animation: glowAndPulse 3s infinite; /* Infinite glow and pulse animation */
+        }
+
+        /* Pulse and glow animation for the title */
+        @keyframes glowAndPulse {
+            0%, 100% {
+                transform: scale(1);
+                text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+            }
+            50% {
+                transform: scale(1.1);
+                text-shadow: 0 0 30px rgba(255, 255, 255, 1);
+            }
+        }
+
+        /* Center the button and add initial hidden state */
+            .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        opacity: 0;  /* Start hidden */
+        margin-top: -150px; /* Move the button up by 50px */
+    }
+
+        /* Button styling */
+        .start-button {
+            padding: 15px 50px; /* Increased padding for a wider button */
+            background-color: black;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: box-shadow 0.3s ease;
+        }
+
+        /* Hover effect with more glow */
+        .start-button:hover {
+            box-shadow: 0 0 30px 15px rgba(255, 255, 255, 0.9); /* Increased glow effect */
+        }
+
+        /* Load-in animation */
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Title -->
+    <h1 class="title">Tambola</h1>
+
+    <div class="container">
+        <button class="start-button" onclick="window.location.href='game.html'">START</button>
+    </div>
+
+    <script>
+        // Wait 1 second after page load, then start the fade-in animation
+        window.onload = function() {
+            setTimeout(function() {
+                document.querySelector('.container').style.animation = 'fadeIn 1s forwards';
+            }, 1000);
+        };
+    </script>
+</body>
+</html>
