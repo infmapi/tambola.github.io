@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Mode</title>
+    <style>
+        /* General body styling with animated gradient background */
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #ffd1ff, #ff9a9e);
+            background-size: 300% 300%;
+            animation: gradientBackground 15s ease infinite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Keyframes for gradient background animation */
+        @keyframes gradientBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glassmorphism effect for the counter box */
+        .counter-container {
+            background: rgba(255, 255, 255, 0.1); /* More translucent glassmorphism effect */
+            border-radius: 35px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin-top: 20px; /* Adjust margin to position it near the top */
+        }
+
+        /* Coin image styling */
+        .coin-image {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        /* Counter text styling */
+        .counter-text {
+            color: black;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Selector grid container */
+        .selector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-gap: 20px;
+            width: 90%;
+            margin-top: 30px;
+        }
+
+        /* Selector box styling */
+        .selector-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 20px;
+            height: 300px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, border 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        /* Hover effect for selector box */
+        .selector-box:hover {
+            transform: scale(1.05);
+        }
+
+        /* Selected box styling */
+        .selector-box.selected {
+            border: 3px solid black;
+        }
+
+        /* Disabled box styling */
+        .selector-box.disabled {
+            background: rgba(128, 128, 128, 0.3); /* Gray tint */
+            cursor: not-allowed;
+        }
+
+        /* Title and price styling */
+        .selector-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .selector-price {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Glassmorphism effect for the start button */
+        .start-button {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 15px 30px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Hover effect for start button */
+        .start-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 6px 40px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <!-- Counter container at the top of the screen -->
+    <div class="counter-container">
+        <img src="coin.png" alt="Coin" class="coin-image">
+        <span class="counter-text" id="counter">100</span>
+    </div>
+
+    <!-- Selector grid with 5 boxes -->
+    <div class="selector-grid">
+        <div class="selector-box" data-price="50">
+            <div class="selector-title">Cheap Game</div>
+            <div class="selector-price"><img src="coin.png" alt="Coin" class="coin-image"> 50</div>
+        </div>
+        <div class="selector-box" data-price="100">
+            <div class="selector-title">Affordable Game</div>
+            <div class="selector-price"><img src="coin.png" alt="Coin" class="coin-image"> 100</div>
+        </div>
+        <div class="selector-box" data-price="250">
+            <div class="selector-title">Premium Game</div>
+            <div class="selector-price"><img src="coin.png" alt="Coin" class="coin-image"> 250</div>
+        </div>
+        <div class="selector-box" data-price="500">
+            <div class="selector-title">Luxury Game</div>
+            <div class="selector-price"><img src="coin.png" alt="Coin" class="coin-image"> 500</div>
+        </div>
+        <div class="selector-box" data-price="1000">
+            <div class="selector-title">Exclusive Game</div>
+            <div class="selector-price"><img src="coin.png" alt="Coin" class="coin-image"> 1000</div>
+        </div>
+    </div>
+
+    <!-- Start Game Button -->
+    <button class="start-button">Start Game</button>
+
+    <script>
+        // Get counter element and selector boxes
+        const counterElement = document.getElementById('counter');
+        const selectorBoxes = document.querySelectorAll('.selector-box');
+        const startButton = document.querySelector('.start-button');
+
+        // Load saved counter value or start with 100
+        let counterValue = localStorage.getItem('counter') ? parseInt(localStorage.getItem('counter')) : 100;
+        counterElement.textContent = counterValue;
+
+        // Function to update counter value in local storage
+        function updateCounter(value) {
+            counterValue += value;
+            counterElement.textContent = counterValue;
+            localStorage.setItem('counter', counterValue);
+        }
+
+        // Function to handle box selection
+        function handleBoxClick(event) {
+            const box = event.currentTarget;
+            const price = parseInt(box.getAttribute('data-price'));
+
+            // Check if the box is disabled
+            if (box.classList.contains('disabled')) return;
+
+            // Remove 'selected' class from previously selected box
+            document.querySelectorAll('.selector-box.selected').forEach(selectedBox => {
+                selectedBox.classList.remove('selected');
+            });
+
+            // Add 'selected' class to the clicked box
+            box.classList.add('selected');
+        }
+
+        // Function to disable boxes based on counter value
+        function updateBoxStates() {
+            selectorBoxes.forEach(box => {
+                const price = parseInt(box.getAttribute('data-price'));
+                if (counterValue >= price) {
+                    box.classList.remove('disabled');
+                } else {
+                    box.classList.add('disabled');
+                }
+            });
+        }
+
+        // Add click event listener to each box
+        selectorBoxes.forEach(box => {
+            box.addEventListener('click', handleBoxClick);
+        });
+
+        // Update box states on page load
+        updateBoxStates();
+
+        // Redirect to game.html on button click
+        startButton.addEventListener('click', () => {
+            window.location.href = 'gamer.html';
+        });
+    </script>
+</body>
+</html>

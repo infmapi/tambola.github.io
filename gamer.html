@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamer Mode</title>
+    <style>
+        /* General body styling with animated gradient background */
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #ffd1ff, #ff9a9e);
+            background-size: 300% 300%;
+            animation: gradientBackground 15s ease infinite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Keyframes for gradient background animation */
+        @keyframes gradientBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glassmorphism effect for the buttons */
+        .glass-button {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 15px 30px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            color: black;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Hover effect for buttons */
+        .glass-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 6px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Glassmorphism effect for money and game value boxes */
+        .money-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 20px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            color: black;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .money-box img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        /* Glassmorphism effect for the grid box */
+        .grid-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 20px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            color: black;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        /* Grid layout styling */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            grid-gap: 10px;
+            grid-template-rows: repeat(3, 1fr);
+            width: 100%;
+            height: 300px;
+        }
+
+        .grid-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: black;
+        }
+
+        /* Button placement */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        .button-container .glass-button {
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .roll-button {
+            border-radius: 50%;
+            height: 100px;
+            width: 100px;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .money-container {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
+</head>
+<body>
+    <!-- Money display at the top of the screen -->
+    <div class="money-container">
+        <div class="money-box">
+            <img src="coin.png" alt="Coin">
+            <span id="game-money">200</span> <!-- Example value, should be set dynamically -->
+        </div>
+    </div>
+
+    <!-- Number display box -->
+    <div class="glass-button" id="number-box">
+        <span id="number">0</span>
+    </div>
+
+    <!-- Buttons container -->
+    <div class="button-container">
+        <button class="glass-button" id="board-button">Board</button>
+        <button class="glass-button roll-button" id="roll-button">Roll</button>
+        <button class="glass-button" id="end-button">End</button>
+    </div>
+
+    <!-- Grid box below the buttons -->
+    <div class="grid-box">
+        <div class="grid-container">
+            <!-- Example grid items -->
+            <div class="grid-item">1</div>
+            <div class="grid-item">2</div>
+            <div class="grid-item">3</div>
+            <div class="grid-item">4</div>
+            <div class="grid-item">5</div>
+            <div class="grid-item">6</div>
+            <div class="grid-item">7</div>
+            <div class="grid-item">8</div>
+            <div class="grid-item">9</div>
+            <div class="grid-item">10</div>
+            <div class="grid-item">11</div>
+            <div class="grid-item">12</div>
+            <div class="grid-item">13</div>
+            <div class="grid-item">14</div>
+            <div class="grid-item">15</div>
+            <div class="grid-item">16</div>
+            <div class="grid-item">17</div>
+            <div class="grid-item">18</div>
+            <div class="grid-item">19</div>
+            <div class="grid-item">20</div>
+            <!-- Add more items as needed -->
+        </div>
+    </div>
+
+    <script>
+        // Functionality for game mode page
+
+        // Example game money value (update based on selected mode)
+        let gameMoney = 200; // Example value, this should be dynamically set
+        document.getElementById('game-money').textContent = gameMoney;
+
+        // Get number box element and buttons
+        const numberBox = document.getElementById('number-box');
+        const rollButton = document.getElementById('roll-button');
+        const boardButton = document.getElementById('board-button');
+        const endButton = document.getElementById('end-button');
+        let usedNumbers = [];
+
+        // Function to generate random number between 1 and 90
+        function getRandomNumber() {
+            let number;
+            do {
+                number = Math.floor(Math.random() * 90) + 1;
+            } while (usedNumbers.includes(number));
+            usedNumbers.push(number);
+            return number;
+        }
+
+        // Handle roll button click
+        rollButton.addEventListener('click', () => {
+            const number = getRandomNumber();
+            numberBox.textContent = number;
+            document.body.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 80%)`;
+        });
+
+        // Redirect to board view on button click
+        boardButton.addEventListener('click', () => {
+            alert('This will show the board.');
+            // Add functionality to display the board
+        });
+
+        // End game and redirect to home page
+        endButton.addEventListener('click', () => {
+            if (confirm('Are you sure you want to end the game?')) {
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>
