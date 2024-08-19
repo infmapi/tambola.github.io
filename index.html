@@ -3,95 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Website</title>
+    <title>Tambola Game</title>
     <style>
-        /* Set the background image */
+        /* General body styling */
         body {
             margin: 0;
             padding: 0;
             background-image: url('Indexbg.png');
             background-size: cover;
             background-position: center;
-            height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
             flex-direction: column;
-            text-align: center;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
         }
 
         /* Title styling */
-        .title {
-            font-size: 60px;
+        h1 {
             color: white;
-            font-weight: bold;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.7); /* Initial glow effect */
-            animation: glowAndPulse 3s infinite; /* Infinite glow and pulse animation */
+            font-size: 48px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            animation: growShrink 3s infinite;
+            margin-bottom: 50px;
         }
 
-        /* Pulse and glow animation for the title */
-        @keyframes glowAndPulse {
+        @keyframes growShrink {
             0%, 100% {
                 transform: scale(1);
-                text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
             }
             50% {
                 transform: scale(1.1);
-                text-shadow: 0 0 30px rgba(255, 255, 255, 1);
             }
         }
 
-        /* Center the button and add initial hidden state */
-            .container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        opacity: 0;  /* Start hidden */
-        margin-top: -150px; /* Move the button up by 50px */
-    }
-
         /* Button styling */
-        .start-button {
-            padding: 15px 50px; /* Increased padding for a wider button */
-            background-color: black;
+        .button {
+            background: rgba(0, 0, 0, 0.4); /* Slight black tint with glassmorphism effect */
             color: white;
-            font-size: 20px;
+            font-size: 24px;
             font-weight: bold;
             border: none;
             border-radius: 15px;
             cursor: pointer;
-            transition: box-shadow 0.3s ease;
+            padding: 15px 30px;
+            margin: 10px;
+            transition: box-shadow 0.3s ease, transform 0.3s;
+            text-align: center;
         }
 
-        /* Hover effect with more glow */
-        .start-button:hover {
-            box-shadow: 0 0 30px 15px rgba(255, 255, 255, 0.9); /* Increased glow effect */
-        }
-
-        /* Load-in animation */
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
+        /* Glow effect on hover */
+        .button:hover {
+            box-shadow: 0 0 20px 10px rgba(255, 255, 255, 0.7);
+            transform: translateY(-5px);
         }
     </style>
 </head>
 <body>
-    <!-- Title -->
-    <h1 class="title">Tambola</h1>
+    <!-- Game title -->
+    <h1>Tambola</h1>
 
-    <div class="container">
-        <button class="start-button" onclick="window.location.href='game.html'">START</button>
-    </div>
+    <!-- Play button -->
+    <button id="playButton" class="button">Play</button>
+
+    <!-- Career button -->
+    <button id="careerButton" class="button">Career</button>
 
     <script>
-        // Wait 1 second after page load, then start the fade-in animation
-        window.onload = function() {
-            setTimeout(function() {
-                document.querySelector('.container').style.animation = 'fadeIn 1s forwards';
-            }, 1000);
-        };
+        // Event listener for the Play button
+        document.getElementById('playButton').addEventListener('click', () => {
+            window.location.href = 'game.html'; // Redirect to game.html
+        });
+
+        // Event listener for the Career button
+        document.getElementById('careerButton').addEventListener('click', () => {
+            window.location.href = 'career.html'; // Redirect to career.html
+        });
     </script>
 </body>
 </html>
